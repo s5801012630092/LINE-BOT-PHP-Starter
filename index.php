@@ -1,48 +1,50 @@
 <?php
- 
-$strAccessToken = "uCCdiLcK039j014oEpGBy9GhkLLknbBxsNt2GuuRUVfakLbzBeRtdBY/usUME9IjTv8NtDsPUaE2mzUVQYuwtO31WMCgk7VS8U32JGF8wIzpS6ALRfHPKNJmCq3t/PBtU134tk5kDneDNVYZeCh4ewdB04t89/1O/w1cDnyilFU=";
- 
-$content = file_get_contents('php://input');
-$arrJson = json_decode($content, true);
- 
-$strUrl = "https://api.line.me/v2/bot/message/reply";
- 
-$arrHeader = array();
-$arrHeader[] = "Content-Type: application/json";
-$arrHeader[] = "Authorization: Bearer {$strAccessToken}";
- 
-if($arrJson['events'][0]['message']['text'] == "สวัสดี"){
-  $arrPostData = array();
-  $arrPostData['replyToken'] = $arrJson['events'][0]['replyToken'];
-  $arrPostData['messages'][0]['type'] = "text";
-  $arrPostData['messages'][0]['text'] = "สวัสดี ID คุณคือ ".$arrJson['events'][0]['source']['userId'];
-}else if($arrJson['events'][0]['message']['text'] == "ชื่ออะไร"){
-  $arrPostData = array();
-  $arrPostData['replyToken'] = $arrJson['events'][0]['replyToken'];
-  $arrPostData['messages'][0]['type'] = "text";
-  $arrPostData['messages'][0]['text'] = "ฉันยังไม่มีชื่อนะ";
-}else if($arrJson['events'][0]['message']['text'] == "ทำอะไรได้บ้าง"){
-  $arrPostData = array();
-  $arrPostData['replyToken'] = $arrJson['events'][0]['replyToken'];
-  $arrPostData['messages'][0]['type'] = "text";
-  $arrPostData['messages'][0]['text'] = "ฉันทำอะไรไม่ได้เลย คุณต้องสอนฉันอีกเยอะ";
-}else{
-  $arrPostData = array();
-  $arrPostData['replyToken'] = $arrJson['events'][0]['replyToken'];
-  $arrPostData['messages'][0]['type'] = "text";
-  $arrPostData['messages'][0]['text'] = "ฉันไม่เข้าใจคำสั่ง";
-}
- 
- 
-$ch = curl_init();
-curl_setopt($ch, CURLOPT_URL,$strUrl);
-curl_setopt($ch, CURLOPT_HEADER, false);
-curl_setopt($ch, CURLOPT_POST, true);
-curl_setopt($ch, CURLOPT_HTTPHEADER, $arrHeader);
-curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($arrPostData));
-curl_setopt($ch, CURLOPT_RETURNTRANSFER,true);
-curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-$result = curl_exec($ch);
-curl_close ($ch);
- 
-?>
+
+/**
+ * Copyright 2016 LINE Corporation
+ *
+ * LINE Corporation licenses this file to you under the Apache License,
+ * version 2.0 (the "License"); you may not use this file except in compliance
+ * with the License. You may obtain a copy of the License at:
+ *
+ *   https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+ * WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+ * License for the specific language governing permissions and limitations
+ * under the License.
+ */
+
+require_once('./LINEBotTiny.php');
+
+$channelAccessToken = '<uCCdiLcK039j014oEpGBy9GhkLLknbBxsNt2GuuRUVfakLbzBeRtdBY/usUME9IjTv8NtDsPUaE2mzUVQYuwtO31WMCgk7VS8U32JGF8wIzpS6ALRfHPKNJmCq3t/PBtU134tk5kDneDNVYZeCh4ewdB04t89/1O/w1cDnyilFU=>';
+$channelSecret = '<8e6a8972aeb270d3ba26167cd9c57096>';
+
+$client = new LINEBotTiny($channelAccessToken, $channelSecret);
+foreach ($client->parseEvents() as $event) {
+    switch ($event['type']) {
+        case 'message':
+            $message = $event['message'];
+            switch ($message['type']) {
+                case 'text':
+                    $client->replyMessage(array(
+                        'replyToken' => $event['replyToken'],
+                        'messages' => array(
+                            array(
+                                'type' => 'text',
+                                'text' => $message['text']
+                            )
+                        )
+                    ));
+                    break;
+                default:
+                    error_log("Unsupporeted message type: " . $message['type']);
+                    break;
+            }
+            break;
+        default:
+            error_log("Unsupporeted event type: " . $event['type']);
+            break;
+    }
+};
