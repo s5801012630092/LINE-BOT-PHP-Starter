@@ -22,11 +22,7 @@ if (!is_null($events['events'])) {
 			$messages = [
 				{
 					'type' => 'text',
-					'text' => $text = 'Hello'
-				},
-				{
-					'type' => 'text',
-					'text' => $text = 'May I help you?'
+					'Hello' => $text = 'Hello,user'
 				}
 			];
 
