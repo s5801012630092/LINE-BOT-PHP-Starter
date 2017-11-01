@@ -21,7 +21,7 @@ if (!is_null($events['events'])) {
 				
            case 'หาร้านอาหาร': 
             $url = "https://maps.googleapis.com/maps/api/place/radarsearch/json?language=th&location=13.818974, 100.514368&radius=200&type=restaurant&key=AIzaSyBEA0UcZj9m-fYvwGTx0aoITGJxyWLdGm4";
-            $curl_handle = curl_init();2
+            $curl_handle = curl_init();
             curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt( $curl_handle, CURLOPT_URL, $url );
             curl_setopt( $curl_handle, CURLOPT_RETURNTRANSFER, true);
