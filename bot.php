@@ -77,8 +77,8 @@ if (!is_null($events['events'])) {
 							     'text' => "$addname"
 					 ];
           break;
-          case 'เอทีเอ็ม': 
-            $url = "https://maps.googleapis.com/maps/api/place/radarsearch/json?language=th&location=13.818987, 100.514330&radius=200&type=AIzaSyAe1BnFRgF3ufAtZqsz-8wrMzJ9X7T1rfM";
+          case 'วัด': 
+            $url = "https://maps.googleapis.com/maps/api/place/radarsearch/json?language=th&location=13.818987, 100.514330&radius=200&type=church&key=AIzaSyAe1BnFRgF3ufAtZqsz-8wrMzJ9X7T1rfM";
             $curl_handle = curl_init();
             curl_setopt($ch1, CURLOPT_SSL_VERIFYPEER, false);
             curl_setopt( $curl_handle, CURLOPT_URL, $url );
